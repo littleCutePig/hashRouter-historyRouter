@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>hash路由</title>
+</head>
+
+<body>
+    <a href="#/">首页</a>
+    <a href="#/home">home</a>
+    <a href="#/index">index</a>
+    <div id="content"></div>
+    <script>
+        class Router {
+            constructor({routes}) {
+                this.routes = routes;
+                this.everyPath = {};
+                this.init()
+                this.routes.forEach(item => {
+                    console.log(item.path)
+                    this.everyPath[item.path] = function(){
+                        document.getElementById('content').innerHTML = item.component
+                    }
+                })
+            }
+            init(){
+                window.addEventListener('load',this.updateLocation.bind(this)) //刷新页面
+                window.addEventListener('hashchange',this.updateLocation.bind(this)) // 改变路径
+            }
+            updateLocation(){
+                let pathRes = window.location.hash.slice(1)
+                console.log(this.everyPath,'-----',pathRes)
+                this.everyPath[pathRes]()
+            }
+        }
+        new Router({
+            routes: [
+                {
+                    path: '/',
+                    component: '首页'
+                }, {
+                    path: '/home',
+                    component: 'home'
+                }, {
+                    path: '/index',
+                    component: 'index'
+                }
+            ]
+        })
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>history路由</title>
+</head>
+<body>
+    <a href="javascript:;" data-path="/">去首页</a>
+    <a href="javascript:;" data-path="/home">去home</a>
+    <a href="javascript:;" data-path="/index">去index</a>
+    <div id="content"></div>
+    <script>
+        class Router{
+            constructor({routes}){
+                this.router = routes;
+                this.init();
+                this.bindClick()
+            }
+            init() {
+                window.addEventListener('popstate',this.updateView.bind(this))
+            };
+            updateView() {
+                let content = document.getElementById('content');
+                let clickPath = window.location.pathname;
+                content.innerHTML = this.router.filter(val => val.path === clickPath)[0].component            
+            };
+            bindClick() {
+                let pushA = document.querySelectorAll('a');
+                [].forEach.call(pushA,item => {
+                    item.addEventListener('click',() => {
+                        let clickRes = item.getAttribute('data-path')
+                        window.history.pushState({},null,clickRes)
+                        this.updateView()
+                    })
+                })
+            }
+        }
+        new Router({
+            routes:[
+                {
+                    path: '/',
+                    component: '首页'
+                },
+                {
+                    path: '/home',
+                    component: 'home'
+                },
+                {
+                    path: '/index',
+                    component: 'index'
+                }
+            ]
+        })
+    </script>
+</body>
+</html>
